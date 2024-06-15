@@ -8,14 +8,14 @@ import importAssets from 'rollup-plugin-import-assets';
 import codegen from 'rollup-plugin-codegen';
 import mdx from '@mdx-js/rollup'
 
-import plugin from "./plugin.json" assert {type: "json"};
+import plugin from "./plugin.json" with { type: "json" };
 
 export default defineConfig({
 	input: './src/index.tsx',
 	plugins: [
 		nodeResolve({ browser: true }),
 		codegen.default(),
-		mdx({providerImportSource: '@mdx-js/react'}),
+		mdx({ providerImportSource: '@mdx-js/react' }),
 		commonjs(),
 		typescript(),
 		json(),

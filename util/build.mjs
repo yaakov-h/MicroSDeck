@@ -25,7 +25,7 @@ function runCommand(command, directory = "") {
 }
 
 async function importJson(file) {
-	return (await import(file, { assert: { type: "json" } })).default;
+	return (await import(file, { with: { type: "json" } })).default;
 }
 
 const { name: PluginName } = await importJson(join(basePath, "plugin.json"));
