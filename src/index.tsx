@@ -22,6 +22,7 @@ import { CardActionsContextMenu } from "./components/CardActions";
 import { backend } from "../lib/src";
 import { version as libVersion } from "../lib/src";
 import { version } from "../package.json";
+import { CardsAndGames } from "@cebbinghaus/microsdeck";
 
 if (!IsMatchingSemver(libVersion, version)) {
 	throw new Error("How the hell did we get here???");
@@ -71,6 +72,31 @@ function EditCardButton(props: EditCardButtonProps) {
 	)
 }
 
+function WelcomeCard({ cardsAndGames }: { cardsAndGames: CardsAndGames }) {
+	//TODO: we probably want some way to disable the welcome message...
+
+	function onClick() {
+		Navigation.CloseSideMenus();
+		Navigation.Navigate(DOCUMENTATION_PATH);
+	}
+
+	return (
+		<div style={{ padding: "5px", boxShadow: "5px 5px 12px #0005"}}>
+			<h2>Welcome</h2>
+			It looks like you are new to MicroSDeck, click the below button to let the interactive documentation guide you through using MicroSDeck
+
+			<DialogButton
+				style={{ height: "40px", minWidth: "40px", display: "flex", justifyContent: "center", alignItems: "center", padding: "10px", margin: "4px" }}
+				onClick={onClick}
+				onOKButton={onClick}
+				onOKActionDescription="Open Documentation"
+			>
+				Open Documentation
+			</DialogButton>
+		</div>
+	);
+}
+
 function Content() {
 	const { currentCardAndGames, cardsAndGames, microSDeck } = useMicroSDeckContext();
 
@@ -106,6 +132,7 @@ function Content() {
 	return (
 		<>
 			<Focusable onMenuActionDescription='Open Docs' onMenuButton={() => { Navigation.CloseSideMenus(); Navigation.Navigate(DOCUMENTATION_PATH); }}>
+				<WelcomeCard cardsAndGames={cardsAndGames} />
 				<div style={{ margin: "5px", marginTop: "0px" }}>
 					Rename, Reorder or Remove MicroSD Cards
 				</div>
@@ -154,7 +181,7 @@ export default definePlugin((serverApi: ServerAPI) => {
 	const patch = PatchAppScreen(serverApi);
 
 	serverApi.routerHook.addRoute(DOCUMENTATION_PATH, () => (
-		<MicroSDeckContextProvider microSDeck={window.MicroSDeck || (() => {throw "MicroSDeck not initialized";})()}>
+		<MicroSDeckContextProvider microSDeck={window.MicroSDeck || (() => { throw "MicroSDeck not initialized"; })()}>
 			<Docs />
 		</MicroSDeckContextProvider>));
 
